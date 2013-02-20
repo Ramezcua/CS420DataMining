@@ -1,0 +1,6 @@
+       fixed.acidity     volatile.acidity          citric.acid       residual.sugar            chlorides 
+         1.862794726          0.161999280          0.199888694          1.424834753          0.037258412 
+ free.sulfur.dioxide total.sulfur.dioxide              density                   pH            sulphates 
+        10.038538391         27.253279757          0.002067363          0.154553623          0.155557965 
+             alcohol              quality 
+         1.106109307          0.491627032 

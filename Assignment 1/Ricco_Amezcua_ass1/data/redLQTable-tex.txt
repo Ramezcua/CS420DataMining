@@ -1,0 +1,19 @@
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{rr}
+  \hline
+ & mean \\ 
+  \hline
+fixed.acidity & 8.14 \\ 
+  Volatile Acidity & 0.59 \\ 
+  Citric Acid & 0.24 \\ 
+  Residual Sugar & 2.54 \\ 
+  Chlorides & 0.09 \\ 
+  Free Sulfur Dioxide & 16.57 \\ 
+  Total Sulfur Dioxide & 54.65 \\ 
+  Density & 1.00 \\ 
+  pH & 3.31 \\ 
+  Sulphates & 0.62 \\ 
+  Alcohol & 9.93 \\ 
+  Quality & 4.90 \\ 
+   \hline
