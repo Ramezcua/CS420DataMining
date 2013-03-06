@@ -1,4 +1,5 @@
 
+# This function is used to make the split points for continous attributes
 MakeSplitPoints <- function(points){
   # Adding the first point from points as it will be the first point in split points
   splitpoints <- points[1]
@@ -9,6 +10,37 @@ MakeSplitPoints <- function(points){
   
   return (splitpoints)
 }
+
+# These are my functions that will determine the "ratings" of attributes
+# They are prefixed binary because they only take 2 arguments
+BinaryGini <- function(x, y){
+  # This function returns the gini value of two numbers
+  total <- x + y
+  return (1 -  ((x/total)^2 + (y/total)^2) ) 
+}
+
+BinaryClassificationError <- function(x, y){
+  # This function returns the classification error of two numbers
+  total <- x + y
+  return (1 - ( max(x/total, y/total) ))
+}
+
+BinaryEntropy <- function(x, y){
+  # This function returns the entropy of two numbers
+  total <- x + y
+  entropy.x <- 0
+  entropy.y <- 0
+  
+  if (x != 0){
+    entropy.x <- -((x/total)*(log2(x/total)))
+  }
+  if (y != 0){
+    entropy.y <- -((y/total)*(log2(y/total)))  
+  }
+  
+  return (entropy.x + entropy.y)
+}
+
 
 spambase <- read.csv("./spambase/spambase.data", header=F, 
                      colClasses=c(rep('numeric',57), 'factor'))
@@ -84,16 +116,17 @@ train.set <- spambase[i==1,]
 test.set <- spambase[i==2,]
 
 
-BestSplit <- function(df){
+BestSplit <- function(df, RatingFunction){
   # 58 is a magic number because it refers to the last row in df, which is spam in spambase
   # Didn't have time to figure out how formula works
   att.num <- 1
   sorted.values <- sort(df[,att.num])
-  temp.continous.frame <- data.frame(value=numeric(0), 
-                          not.spam.above=numeric(0), 
-                          not.spam.below=numeric(0), 
-                          spam.above=numeric(0), 
-                          spam.below=numeric(0))  
+  temp.continous.frame <- data.frame(value = numeric(0), 
+                                    not.spam.above = numeric(0), 
+                                    not.spam.below = numeric(0), 
+                                    spam.above = numeric(0), 
+                                    spam.below = numeric(0),
+                                    rating = numeric(0))  
 	best.pick <-NULL
   checked.values <- NULL
   split.points <- MakeSplitPoints(unique(sorted.values))
@@ -113,7 +146,8 @@ BestSplit <- function(df){
                           not.spam.above = first.above.not.spam, 
                           not.spam.below = 0, 
                           spam.above = first.above.spam, 
-                          spam.below = 0))
+                          spam.below = 0,
+                          rating = RatingFunction(first.above.not.spam, first.above.spam) ))
   
   # Now go through the other split points
   for (j in 2:length(split.points)){
@@ -127,9 +161,9 @@ BestSplit <- function(df){
     
     # Check if the first entry 
     while(split.points[j] > sorted.df[1,att.num]){
-      if (sorted.df[1, 58] == 'notspam') {
+      if (sorted.df[1, 58] == 'not_spam') {
         # a point must be moved from not spam above to not spam below
-        ns.below <- ns.bleow + 1
+        ns.below <- ns.below + 1
         ns.above <- ns.above - 1
       } else if (sorted.df[1,58] == 'spam'){
         # a point must be moved from spam above to spam below
@@ -142,16 +176,25 @@ BestSplit <- function(df){
     
     # All points under split point j have been counted and so j must be added to the 
     # temp data frame
+    s1 <- (ns.above + s.above)/ (ns.above + s.above + ns.below + s.below)
+    s2 <- (ns.below + s.below)/ (ns.above + s.above + ns.below + s.below)
+    
     temp.continous.frame <- rbind(temp.continous.frame, data.frame(
-      value = split.points[j], 
-      not.spam.above = ns.above, 
-      not.spam.below = ns.below, 
-      spam.above = s.above, 
-      spam.below = s.below))
+                            value = split.points[j], 
+                            not.spam.above = ns.above, 
+                            not.spam.below = ns.below, 
+                            spam.above = s.above, 
+                            spam.below = s.below,
+                            rating =  s1*(RatingFunction(ns.above, s.above)) + 
+                                    s2*(RatingFunction(ns.below, s.below)) ))
     
   }
+
+  #print(temp.continous.frame)
+  result <- temp.continous.frame[which.min(
+                                  temp.continous.frame$"rating")]
+  print(result)
   
-  print(temp.continous.frame)
 }
 
-BestSplit(test.set)
+BestSplit(test.set, BinaryGini)
