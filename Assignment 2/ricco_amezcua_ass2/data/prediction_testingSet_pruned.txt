@@ -1,0 +1,4 @@
+          predTestPrune
+           not_spam spam
+  not_spam      514   48
+  spam           70  309

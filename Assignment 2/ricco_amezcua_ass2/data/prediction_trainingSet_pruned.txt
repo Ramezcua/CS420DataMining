@@ -1,0 +1,4 @@
+          predTrainPrune
+           not_spam spam
+  not_spam     2052  174
+  spam          261 1173
