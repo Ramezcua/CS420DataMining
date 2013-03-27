@@ -95,11 +95,10 @@ March 26, 2013
 
 \begin_layout Abstract
 This is a report for the third assignment of CS422 Data Mining.
- In this report, a set of data containing emails and its various qualites
- are observed.
- A decision tree is created and used to classify the emails as spam or not
- spam.
- Then, an attempt is made to make a decision tree algorithm.
+ In this report, two data sets are looked at: one about spam emails and
+ another about breast cancer.
+ Then various classifiers are tested on these data sets to check the accuracy
+ of the classifiers.
 \end_layout
 
 \begin_layout Section
@@ -107,23 +106,26 @@ Problem Statement
 \end_layout
 
 \begin_layout Standard
-In this report, data collected from emails is looked at.
- Various details about the emails have already been collected and are available
- in the data set.
- Also, whether the email is spam or not spam has been included.
- Using this data set, a decision tree algorithm is used to create a decision
- tree using 80% of the data set.
- The decision tree is then tested on the other 20% of the data set.
- From this, a confusion matrix is created and the accuracy, recall, and
- precision is found.
- The importance of this report is to show the effectiveness of the decision
- tree algorithm as a classifier.
-\end_layout
-
-\begin_layout Standard
-This process is first done using the rpart package in r.
- The creation of a decision tree algorithm was attempted but not completed
- in time.
+In this report various classifying algorithms are tested.
+ They include: support vector machines, neural networks, naive bayes classifier,
+ and logistric regression.
+ Also, my own interpretation of the perceptron algorithm is also tested.
+ The data sets that looked at include a data set involving spam email and
+ the other involving breast cancer.
+ The spam email data set has various attributes about the emails including
+ he frequency of certain characters and phrases.
+ The emails are classed into spam or not spam.
+ The breast cancer data set contains various medical measurements about
+ patients.
+ The patients are then classified as being benign or malignant.
+ The major difference between these two data sets is size and number of
+ attributes.
+ The spam data set contains more than 4000 examples with 58 attributes,
+ where as the breast cancer data set has less 1000 examples with only 10
+ attributes.
+ Therefore, the results will show each classifier's adaptability to large
+ and small data sets.
+ 
 \end_layout
 
 \begin_layout Section
@@ -131,57 +133,54 @@ Proposed Solution
 \end_layout
 
 \begin_layout Standard
-The data is split in to two parts: %80 for training and %20 for testing.
- The samples are chosen randomly without replacement.
+The data sets were first split up in to training and testing sets.
+ 80% of the data went to training and 20% went to testing.
+ The examples for each set were randomly chosen without replacement.
 \end_layout
 
 \begin_layout Standard
-The first question used the 
-\emph on
-rpart
-\emph default
- package to create a decision tree.
- Its graph was looked at to determine the best value for its pruning.
+The support vector machine, neural network, naive bayes classifier, and
+ logistic regression were all from different R packages.
+ All attributes for the classifiers were kept at default except for the
+ neural network.
+ The neural network was given 4 passes to create the network.
+ 
 \end_layout
 
 \begin_layout Standard
-While the decision tree algorithm was not implemented, if it was, the following
- would be the algorithm.
- First the main algorithm would be 
+For my perceptron algorithm, first the values had to be normalized.
+ This was done by first finding the mean and standard deviation of each
+ attribute.
+ Then each value was subtracted by the mean and then divided by the standard
+ deviation.
+ After the data had been normalized, the perceptron algorithm was run.
+ First an empty set of weights was created and set to 0.
+ Then, a vector was created from one example in the data, and an extra attribute
+ was added and set to 1.
+ This would create the bias.
+ The weight vector and example was then multiplied together and 
 \emph on
-GrowTree
+sign 
 \emph default
- and it would take a data frame as its argument.
- It would then check the stopping condition, which is if all of the emails
- in the data frame have the same class or all the attributes have the same
- value.
- If this is true, a leaf is created, classified by the majority class, and
- then returned.
- Else, a new node in the tree is created and a best split algorithm is used
- to find the attribute that will give the best split and the split point
- that will give the best split.
- The rating of the attributes is done using either Gini, Entropy, or the
- Classification Error.
- Once the attribute is found, it is used to split the data frame into two
- sets, those below the split point and those equal or above the split point.
- The function 
-\emph on
-GrowTree
-\emph default
- is then called on both children.
- Once they return, they'll be associated as the children of the new node.
- Then, the new node is returned.
+function was used to determine if the multiplication return 1 or -1.
+ If the weights correctly classified the class, they were not changed.
+ However, if they incorrectly classified the class, the weights had to be
+ changed.
+ First an error value was created using the actual class minus the classificatio
+n.
+ This was multiplied by the learning rate (which was set to 0.1) and each
+ value in the example vector.
+ This was then added to the old weight vector to create a new vector.
+ This process was run on every example in the data set.
+ To correctly form the weights, the algorithm was ran multiple times using
+ the same weights.
+ Using the weights from the perceptron, the testing set was classified.
 \end_layout
 
 \begin_layout Standard
-The 
-\emph on
-Prune
-\emph default
- function would look at the growth between a child and a parent.
- It would take an argument which would be a threshold.
- If the a branch has a growth smaller than the threshold, it would be pruned
- from the decision tree.
+For every classifier, a confusion matrix was built.
+ From each confusiton matrix, the accuracy and error was found, which is
+ detailed in table 1 and table 2.
 \end_layout
 
 \begin_layout Section
@@ -202,23 +201,13 @@ code
 data 
 \emph default
 folder.
+ The data files will contain the confusion matric for a certain classifier,
+ the classifier's accuracy and the error.
 \end_layout
 
 \begin_layout Standard
-The second question had the largest problem.
- The implementation of the 
-\emph on
-BestSplit
-\emph default
- algorithm was completed and works on a data set once, however it is a large
- bottleneck.
- When ran on a large data set, it takes a very long time to complete once,
- let alone enough times to create a tree.
- No solution was found to fix the algorithm, and therefore the 
-\emph on
-GrowTree 
-\emph default
-algorithm could not be completed.
+My logistric regression algorithm was not completed in time for the report
+ deadline.
 \end_layout
 
 \begin_layout Section
@@ -226,57 +215,35 @@ Results and Discussion
 \end_layout
 
 \begin_layout Standard
-Figure 4.1 shows the decision tree that was created using the rpart function.
- The tree is quite dense, however, the the algorithm was able to get the
- data down to at most a %20-%80 split in the data, and in some places %10-%90.
- Looking at Table 1, which contains the metrics from the confusion matrices,
- the unpruned tree has good accuracy, precision, and recall for the training
- set, which is to be expected.
- The metrics for the data set dip slightly for testing set, but only by
- at most %2.
- 
+Looking at the spam base data in table 1, the support vector machine classifier
+ was the most accurate.
+ This classifier was also the second most accurate for the breast cancer
+ data set.
+ In table 2, the naive bayes classifier was 96% accurate.
+ However, interestingly, the naive bayes classifier was only 71% accurate
+ for the spam base data set.
+ This may likely be a reflection on the size of the data set.
+ Since the spam base data set contained many more examples, it is possible
+ that the naive bayes classifier had a more difficult time classifiying
+ all of the examples.
+ It may also be that the spam data set had attributes that depended on each
+ other, which the naive bayes classifier cannot take in to account.
+ It is interesting to note that the naive bayes classifier is the only package
+ algorithm to have less than 90% in both tables.
 \end_layout
 
 \begin_layout Standard
-Using the plot shown in Figure 4.2, the error rate was determined to be 0.017.
- Using this error rate, the tree was pruned by this much.
- This gives the pruned tree at Figure 4.3.
- Looking again at Table 1, the accuracy, precision, and recall has dropped
- %2 for the training set.
- The scores for the testing set are much lower for the pruned tree than
- the unpruned tree.
- This can be for various reasons.
- One is that the tree was pruned too much.
- Another is that the testing set was a good representation of the training
- set.
- If this is the case, it would be interesting to have more data to test
- to see if the accuracy, precision, and recall stay high for other samples
- of data.
+My perceptron algorithm scored at most 66% in both tables 1 and 2.
+ In table 1, having more runs made the classifier less accurate.
+ This lower accuracy is not seen in table 2, which may be a reflection on
+ the data set size.
+ It is uncertain as to what caused the 66% accuracy rating.
+ It may either be that the perceptron algorithm is not suited to this type
+ of classification or whether there was a user error when implementing the
+ algorithm.
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float table
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset ERT
 status open
 
@@ -290,7 +257,7 @@ begin{center}
 \backslash
 begin{tabular}{ccc}   
 \backslash
-hline  & Spam Base Classifiers 
+hline  & Table 1: Spam Base Classifiers 
 \backslash
 
 \backslash
@@ -340,38 +307,7 @@ end{table}
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
-\begin_inset Float table
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset ERT
 status open
 
@@ -385,7 +321,7 @@ begin{center}
 \backslash
 begin{tabular}{ccc}   
 \backslash
-hline  & Breast Cancer Classifiers 
+hline  & Table 2: Breast Cancer Classifiers 
 \backslash
 
 \backslash
@@ -435,12 +371,7 @@ end{table}
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
+\begin_layout Standard
 
 \end_layout
 
