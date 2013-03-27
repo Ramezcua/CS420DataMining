@@ -1,0 +1,35 @@
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccc}
+  \hline
+ & Spam Base Classifiers \\ 
+  \hline
+  Classifier & Accuracy & Error\\ 
+  SVM & 0.931 & 0.068 \\ 
+  Neural Network & 0.928 & 0.071 \\ 
+  Naive Bayes & 0.712 & 0.287 \\ 
+  Logistic Regression & 0.923 & 0.076 \\ 
+  My Perceptron (10 runs) & 0.661 & 0.338 \\ 
+  My Perceptron (25 runs) & 0.424 & 0.565 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+\begin{table}[ht]
+\begin{center}
+\begin{tabular}{ccc}
+  \hline
+ & Breast Cancer Classifiers \\ 
+  \hline
+  Classifier & Accuracy & Error\\ 
+  SVM & 0.954 & 0.045 \\ 
+  Neural Network & 0.941 & 0.058 \\ 
+  Naive Bayes & 0.964 & 0.035 \\ 
+  Logistic Regression & 0.941 & 0.058 \\ 
+  My Perceptron (10 runs) & 0.661 & 0.338 \\ 
+  My Perceptron (25 runs) & 0.661 & 0.338 \\ 
+   \hline
+\end{tabular}
+\end{center}
+\end{table}

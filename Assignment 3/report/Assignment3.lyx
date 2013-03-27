@@ -1,0 +1,472 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\begin_modules
+theorems-ams
+eqs-within-sections
+figs-within-sections
+\end_modules
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing single
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 2cm
+\topmargin 1cm
+\rightmargin 2cm
+\headsep 1cm
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Assignment 3: Classification
+\end_layout
+
+\begin_layout Author
+Ricco Amezcua
+\begin_inset Newline newline
+\end_inset
+
+CS422 Data Mining
+\begin_inset Newline newline
+\end_inset
+
+Department of Computer Science
+\begin_inset Newline newline
+\end_inset
+
+Illinois Institute of Technology
+\end_layout
+
+\begin_layout Date
+March 26, 2013
+\end_layout
+
+\begin_layout Abstract
+This is a report for the third assignment of CS422 Data Mining.
+ In this report, a set of data containing emails and its various qualites
+ are observed.
+ A decision tree is created and used to classify the emails as spam or not
+ spam.
+ Then, an attempt is made to make a decision tree algorithm.
+\end_layout
+
+\begin_layout Section
+Problem Statement
+\end_layout
+
+\begin_layout Standard
+In this report, data collected from emails is looked at.
+ Various details about the emails have already been collected and are available
+ in the data set.
+ Also, whether the email is spam or not spam has been included.
+ Using this data set, a decision tree algorithm is used to create a decision
+ tree using 80% of the data set.
+ The decision tree is then tested on the other 20% of the data set.
+ From this, a confusion matrix is created and the accuracy, recall, and
+ precision is found.
+ The importance of this report is to show the effectiveness of the decision
+ tree algorithm as a classifier.
+\end_layout
+
+\begin_layout Standard
+This process is first done using the rpart package in r.
+ The creation of a decision tree algorithm was attempted but not completed
+ in time.
+\end_layout
+
+\begin_layout Section
+Proposed Solution
+\end_layout
+
+\begin_layout Standard
+The data is split in to two parts: %80 for training and %20 for testing.
+ The samples are chosen randomly without replacement.
+\end_layout
+
+\begin_layout Standard
+The first question used the 
+\emph on
+rpart
+\emph default
+ package to create a decision tree.
+ Its graph was looked at to determine the best value for its pruning.
+\end_layout
+
+\begin_layout Standard
+While the decision tree algorithm was not implemented, if it was, the following
+ would be the algorithm.
+ First the main algorithm would be 
+\emph on
+GrowTree
+\emph default
+ and it would take a data frame as its argument.
+ It would then check the stopping condition, which is if all of the emails
+ in the data frame have the same class or all the attributes have the same
+ value.
+ If this is true, a leaf is created, classified by the majority class, and
+ then returned.
+ Else, a new node in the tree is created and a best split algorithm is used
+ to find the attribute that will give the best split and the split point
+ that will give the best split.
+ The rating of the attributes is done using either Gini, Entropy, or the
+ Classification Error.
+ Once the attribute is found, it is used to split the data frame into two
+ sets, those below the split point and those equal or above the split point.
+ The function 
+\emph on
+GrowTree
+\emph default
+ is then called on both children.
+ Once they return, they'll be associated as the children of the new node.
+ Then, the new node is returned.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+Prune
+\emph default
+ function would look at the growth between a child and a parent.
+ It would take an argument which would be a threshold.
+ If the a branch has a growth smaller than the threshold, it would be pruned
+ from the decision tree.
+\end_layout
+
+\begin_layout Section
+Implementation Details
+\end_layout
+
+\begin_layout Standard
+The R scripts can be found inside the 
+\emph on
+code
+\emph default
+ folder.
+ The scripts are separated in to two scripts: question 1, question 2 .
+ They are ran by running all of the commands in order.
+ The code must be in the same file as the data files.
+ The data matrices can be found in the 
+\emph on
+data 
+\emph default
+folder.
+\end_layout
+
+\begin_layout Standard
+The second question had the largest problem.
+ The implementation of the 
+\emph on
+BestSplit
+\emph default
+ algorithm was completed and works on a data set once, however it is a large
+ bottleneck.
+ When ran on a large data set, it takes a very long time to complete once,
+ let alone enough times to create a tree.
+ No solution was found to fix the algorithm, and therefore the 
+\emph on
+GrowTree 
+\emph default
+algorithm could not be completed.
+\end_layout
+
+\begin_layout Section
+Results and Discussion
+\end_layout
+
+\begin_layout Standard
+Figure 4.1 shows the decision tree that was created using the rpart function.
+ The tree is quite dense, however, the the algorithm was able to get the
+ data down to at most a %20-%80 split in the data, and in some places %10-%90.
+ Looking at Table 1, which contains the metrics from the confusion matrices,
+ the unpruned tree has good accuracy, precision, and recall for the training
+ set, which is to be expected.
+ The metrics for the data set dip slightly for testing set, but only by
+ at most %2.
+ 
+\end_layout
+
+\begin_layout Standard
+Using the plot shown in Figure 4.2, the error rate was determined to be 0.017.
+ Using this error rate, the tree was pruned by this much.
+ This gives the pruned tree at Figure 4.3.
+ Looking again at Table 1, the accuracy, precision, and recall has dropped
+ %2 for the training set.
+ The scores for the testing set are much lower for the pruned tree than
+ the unpruned tree.
+ This can be for various reasons.
+ One is that the tree was pruned too much.
+ Another is that the testing set was a good representation of the training
+ set.
+ If this is the case, it would be interesting to have more data to test
+ to see if the accuracy, precision, and recall stay high for other samples
+ of data.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{table}[ht] 
+\backslash
+begin{center} 
+\backslash
+begin{tabular}{ccc}   
+\backslash
+hline  & Spam Base Classifiers 
+\backslash
+
+\backslash
+    
+\backslash
+hline   Classifier & Accuracy & Error
+\backslash
+
+\backslash
+    SVM & 0.931 & 0.068 
+\backslash
+
+\backslash
+    Neural Network & 0.928 & 0.071 
+\backslash
+
+\backslash
+    Naive Bayes & 0.712 & 0.287 
+\backslash
+
+\backslash
+    Logistic Regression & 0.923 & 0.076 
+\backslash
+
+\backslash
+    My Perceptron (10 runs) & 0.661 & 0.338 
+\backslash
+
+\backslash
+    My Perceptron (25 runs) & 0.424 & 0.565 
+\backslash
+
+\backslash
+     
+\backslash
+hline 
+\backslash
+end{tabular} 
+\backslash
+end{center} 
+\backslash
+end{table}                   
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+begin{table}[ht] 
+\backslash
+begin{center} 
+\backslash
+begin{tabular}{ccc}   
+\backslash
+hline  & Breast Cancer Classifiers 
+\backslash
+
+\backslash
+    
+\backslash
+hline   Classifier & Accuracy & Error
+\backslash
+
+\backslash
+    SVM & 0.954 & 0.045 
+\backslash
+
+\backslash
+    Neural Network & 0.941 & 0.058 
+\backslash
+
+\backslash
+    Naive Bayes & 0.964 & 0.035 
+\backslash
+
+\backslash
+    Logistic Regression & 0.941 & 0.058 
+\backslash
+
+\backslash
+    My Perceptron (10 runs) & 0.661 & 0.338 
+\backslash
+
+\backslash
+    My Perceptron (25 runs) & 0.661 & 0.338 
+\backslash
+
+\backslash
+     
+\backslash
+hline 
+\backslash
+end{tabular} 
+\backslash
+end{center} 
+\backslash
+end{table}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+References
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset CommandInset href
+LatexCommand href
+target "http://cran.r-project.org/manuals.html"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset CommandInset href
+LatexCommand href
+target "http://en.wikipedia.org/wiki/Perceptron"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
