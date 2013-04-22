@@ -33,7 +33,7 @@ FindCluster <- function(point, centroids){
   for(i in 1:k){
     distances <- append(distances, EuclideanDistance(point, centroids[i,]))
   }
-  print(distances)
+  #print(distances)
   cluster <- which(distances==(min(distances)))
   return(cluster[1])
 }
@@ -57,9 +57,19 @@ k.three$Cluster <- sample(1:k, nrow(k.three), replace=TRUE)
 # Initiale update of points
 centroids <- UpdateCentroids(k.three, centroids, k)
 
-# Now I need a function that will update the members of each centroid
 
-#Use FindCluster to update the dataframe k.three
-
-
+stopping <- TRUE
+i <- 0
+while(stopping){
+  temp <- k.three
+  # remove cluster column for easier calculation
+  temp$Cluster <- NULL
+  centroids <- UpdateCentroids(k.three, centroids, k)
+  k.three$Cluster <- apply(temp, 1,FindCluster, centroids)
+  
+  i <- i + 1
+  if (i > 10){
+    stopping <- FALSE
+  }
+}
 
