@@ -109,13 +109,33 @@ MyKMeans <-function(df, k){
 
 
 #### Algo ####
+# Preping data
+iris.kmeans <- iris
+iris.kmeans$Species <- NULL
+iris.kmeans <- NormalizeData(iris.kmeans, ncol(iris.kmeans))
 
-# Creating data
-k.three <- iris
-k.three$Species <- NULL
-k <- 3
+# K equal to 2
+k.two.clusters <- MyKMeans(iris.kmeans, 2)
+table(iris$Species, k.two.clusters)
 
-# Normalizing the data set
-k.three <- NormalizeData(k.three, ncol(k.three))
 
-MyKMeans(k.three, k)
+# K equal to 3
+k.three.clusters <- MyKMeans(iris.kmeans, 3)
+table(iris$Species, k.three.clusters)
+
+# K equal to 4
+k.four.clusters <- MyKMeans(iris.kmeans, 4)
+table(iris$Species, k.four.clusters)
+
+# Note for ordering a cluster
+# order(k.four.cluster)
+# For matrices use image()
+
+### Notes on what to do next
+# Handle empty clusters.  This can be done by checking that every cluster has a point
+# during assignment. If a cluster is empty ( can be more than 1) find the cluster with
+# the highest SSE and chooose a point from there
+# Graph SSE for myKMeans.  Probably a list of iteration number and kmeans and create a graph
+# from that
+# Compare Datasets. Calculate the Entropy and SSE
+# Similarity Matrix.  Order points by cluster and graph by distance

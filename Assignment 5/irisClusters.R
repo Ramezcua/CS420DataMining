@@ -1,9 +1,10 @@
 
-#### K Means Algorithm
-### k = Two- Unsupervised
-k.two <- iris
-k.two$Species <- NULL
-kmeans.two<- kmeans(k.two, 2)
+##### K Means Algorithm #####
+### Preparing Iris data ###
+iris.data <- iris
+iris.data$Species <- NULL
+### k = Two- Unsupervised ###
+kmeans.two<- kmeans(iris.data, 2)
 kmeans.two
 
 table(iris$Species, kmeans.two$cluster)
@@ -12,23 +13,46 @@ plot(k.two[c("Sepal.Length", "Sepal.Width")], col = kmeans.two$cluster)+
          col = 1:3, pch = 8, cex=2)
 
 ### k = Three - Supervised
-k.three <- iris
-k.three$Species <- NULL
-kmeans.three <- kmeans(k.three, 3)
+kmeans.three <- kmeans(iris.data, 3)
 kmeans.three
 
-table(iris$Species, kmeans.iris.three$cluster)
-plot(iris.three[c("Sepal.Length", "Sepal.Width")], col = kmeans.iris.three$cluster)+ 
-  points(kmeans.iris.three$centers[,c("Sepal.Length", "Sepal.Width")], 
+table(iris$Species, kmeans.three$cluster)
+plot(k.three[c("Sepal.Length", "Sepal.Width")], col = kmeans.three$cluster)+ 
+  points(kmeans.three$centers[,c("Sepal.Length", "Sepal.Width")], 
   col = 1:3, pch = 8, cex=2)
 
 ### k = Four - Supervised
-iris.four <- iris
-iris.four$Species <- NULL
-kmeans.iris.four <- kmeans(iris.four, 4)
-kmeans.iris.four
+kmeans.four <- kmeans(iris.data, 4)
+kmeans.four
 
-table(iris$Species, kmeans.iris.four$cluster)
-plot(iris.four[c("Sepal.Length", "Sepal.Width")], col = kmeans.iris.four$cluster)+ 
-  points(kmeans.iris.four$centers[,c("Sepal.Length", "Sepal.Width")], 
+table(iris$Species, kmeans.four$cluster)
+plot(k.four[c("Sepal.Length", "Sepal.Width")], col = kmeans.four$cluster)+ 
+  points(kmeans.four$centers[,c("Sepal.Length", "Sepal.Width")], 
          col = 1:3, pch = 8, cex=2)
+
+
+
+##### Hierachical Clustering ####
+# Sampling the iris data
+i <- sample(1:dim(iris)[1], 40) # Getting 30 samples
+iris.sample <- iris[i,]
+# Clustering
+# Using the average method
+hc <- hclust(dist(iris.sample), method="ave")
+plot(hc, hang= -1,labels=iris$Species[i])
+
+# Using the centroid method
+hc <- hclust(dist(iris.sample), method="cen")
+plot(hc, hang= -1,labels=iris$Species[i])
+
+# Using the median method
+hc <- hclust(dist(iris.sample), method="median")
+plot(hc, hang= -1,labels=iris$Species[i])
+
+# Using the single method
+hc <- hclust(dist(iris.sample), method="single")
+plot(hc, hang= -1,labels=iris$Species[i])
+
+rm(i)
+
+
