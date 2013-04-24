@@ -107,6 +107,46 @@ MyKMeans <-function(df, k){
   return (as.vector(df$Cluster))
 }
 
+# This function will return the similarity matrix.
+# It takes a data frame and a list of clusters as well as a titile of the graph
+# Data should be normalized
+GetSimilarityMatrix <- function(df, clusters, title){
+  # Order data by cluster groups
+  df["Cluster"] <- NA
+  df$Cluster <- clusters
+  df <- df[order(df$Cluster),]
+  df$Cluster <- NULL
+  sim.matrix <- matrix(data=0, ncol=nrow(df), nrow=nrow(df))
+  for(i in 1:nrow(df)){
+    sim.matrix[i,] <- as.vector(apply(df, 1,EuclideanDistance, df[i,]))
+  }
+  return(image(sim.matrix, col=topo.colors(10), main=title))
+}
+
+# This function returns the SSE value of a data set and its cluster list
+# This function is to be used at the end of a run
+AllClusterSSE <- function(df, k, clusters){
+  natt <- ncol(df)
+  df["Cluster"] <- NA
+  df$Cluster <- clusters
+  df <- df[order(df$Cluster),]
+  
+  centroids <- as.data.frame(matrix(data=0, nrow=k, ncol=natt))
+  centroids <- UpdateCentroids(df, centroids, k)
+  print(df)
+  SSE <- 0
+  for(i in 1:k){
+    temp <- subset(df, Cluster == i)
+    temp$Cluster <- NULL
+    print(temp)
+    sum <-  sum(as.vector(apply(temp, 1,FUN=function(p1,p2){
+      return((EuclideanDistance(p1,p2)^2))}, centroids[i,])))
+    SSE <- SSE + sum
+  }
+  
+  return(SSE)
+}
+
 
 #### Algo ####
 # Preping data
@@ -116,20 +156,24 @@ iris.kmeans <- NormalizeData(iris.kmeans, ncol(iris.kmeans))
 
 # K equal to 2
 k.two.clusters <- MyKMeans(iris.kmeans, 2)
-table(iris$Species, k.two.clusters)
-
 
 # K equal to 3
 k.three.clusters <- MyKMeans(iris.kmeans, 3)
-table(iris$Species, k.three.clusters)
 
 # K equal to 4
 k.four.clusters <- MyKMeans(iris.kmeans, 4)
+
+## Tables
+table(iris$Species, k.two.clusters)
+table(iris$Species, k.three.clusters)
 table(iris$Species, k.four.clusters)
 
-# Note for ordering a cluster
-# order(k.four.cluster)
-# For matrices use image()
+#Similarity Matrices
+GetSimilarityMatrix(iris.kmeans, k.two.clusters, "My K Means: 2 Clusters")
+GetSimilarityMatrix(iris.kmeans, k.three.clusters, "My K Means: 3 Clusters")
+GetSimilarityMatrix(iris.kmeans, k.four.clusters, "My K Means: 4 Clusters")
+
+
 
 ### Notes on what to do next
 # Handle empty clusters.  This can be done by checking that every cluster has a point
@@ -138,4 +182,3 @@ table(iris$Species, k.four.clusters)
 # Graph SSE for myKMeans.  Probably a list of iteration number and kmeans and create a graph
 # from that
 # Compare Datasets. Calculate the Entropy and SSE
-# Similarity Matrix.  Order points by cluster and graph by distance

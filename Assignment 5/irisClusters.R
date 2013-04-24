@@ -55,4 +55,25 @@ plot(hc, hang= -1,labels=iris$Species[i])
 
 rm(i)
 
+#### DB Scan ####
+library("fpc")
+
+iris.data <- iris[-5]
+
+# Eps 0.4
+db <- dbscan(iris.data, eps=0.4, MinPts=5)
+table(iris$Species, db$cluster)
+plotcluster(iris.data,db$cluster)
+
+# Eps 0.5
+db <- dbscan(iris.data, eps=0.5, MinPts=5)
+table(iris$Species, db$cluster)
+plotcluster(iris.data,db$cluster)
+
+# Eps 0.6
+db <- dbscan(iris.data, eps=0.6, MinPts=5)
+table(iris$Species, db$cluster)
+plotcluster(iris.data,db$cluster)
+
+
 
