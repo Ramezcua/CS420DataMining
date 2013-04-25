@@ -59,6 +59,16 @@ FindCluster <- function(point, centroids){
   return(cluster[1])
 }
 
+# This is a helper function that checks if a set of clusters is in
+# the currently active set of clusters.
+# It returns a list of inactive clusters, or 0 if all clusters are active
+ClusterRepCheck <- function(clusters, active.clusters){
+  active.clusters <- unique(active.clusters)
+  inactive.clusters <- which(!(clusters %in% active.clusters))
+  if(length(inactive.clusters) == 0){inactive.clusters <-0}
+  return(inactive.clusters)
+}
+
 # This function has the stopping condition for the k - means algo
 # It takes two sets of cluster as vectors and finds the difference percentage
 # (number of differences)/length
@@ -99,12 +109,45 @@ MyKMeans <-function(df, k){
     
     current.clusters <- as.vector(df$Cluster)
     
+    inactive.clusters <- ClusterRepCheck(c(1:k), current.clusters)
+    
+    if (inactive.clusters[1] != 0){
+      SSEResults <- CentroidSSEVector(df, centroids, inactive.clusters)
+      active.clusters <- SSEResults$clusters
+      SSEList <- SSEResults$SSE
+      
+      for(i in inactive.clusters){
+        max.index <- which.max(SSEList)
+        #Get index of first available point
+        candidate.index <- which(df[,"Cluster"] == active.clusters[1])[1] 
+        # Give that point to the inactive cluster i
+        df[candidate.index, "Cluster"] <- i
+        #Remove the used max cluster for the next candidate
+        active.clusters <- active.clusters[-(max.index)]
+        SSEList <- SSEList[-(max.index)]
+      }
+      
+    }
+    
     if (StoppingCondition(previous.clusters, current.clusters, DIFF.THRESH)){
       stopped <- TRUE
     }
   }
   
   return (as.vector(df$Cluster))
+}
+
+CentroidSSEVector <- function(df, centroids, inactive.clusters){
+  active.clusters <- setdiff(unique(df$Cluster), inactive.clusters)
+  SSE <- NULL
+  for(i in active.clusters){
+    temp <- subset(df, Cluster == i)
+    temp$Cluster <- NULL
+    sum <- sum(as.vector(apply(temp, 1, FUN=function(p1,p2){
+      return(EuclideanDistance(p1,p2)^2)}, centroids[i,])))
+    SSE <- append(SSE, sum)
+  }
+  return(list(clusters=active.clusters, SSE=SSE))
 }
 
 # This function will return the similarity matrix.
@@ -133,12 +176,12 @@ AllClusterSSE <- function(df, k, clusters){
   
   centroids <- as.data.frame(matrix(data=0, nrow=k, ncol=natt))
   centroids <- UpdateCentroids(df, centroids, k)
-  print(df)
+  #print(df)
   SSE <- 0
   for(i in 1:k){
     temp <- subset(df, Cluster == i)
     temp$Cluster <- NULL
-    print(temp)
+    #print(temp)
     sum <-  sum(as.vector(apply(temp, 1,FUN=function(p1,p2){
       return((EuclideanDistance(p1,p2)^2))}, centroids[i,])))
     SSE <- SSE + sum
@@ -168,10 +211,15 @@ table(iris$Species, k.two.clusters)
 table(iris$Species, k.three.clusters)
 table(iris$Species, k.four.clusters)
 
-#Similarity Matrices
+# Similarity Matrices
 GetSimilarityMatrix(iris.kmeans, k.two.clusters, "My K Means: 2 Clusters")
 GetSimilarityMatrix(iris.kmeans, k.three.clusters, "My K Means: 3 Clusters")
 GetSimilarityMatrix(iris.kmeans, k.four.clusters, "My K Means: 4 Clusters")
+
+# Final SSE Calculation
+AllClusterSSE(iris.kmeans, 2, k.two.clusters)
+AllClusterSSE(iris.kmeans, 3, k.three.clusters)
+AllClusterSSE(iris.kmeans, 4, k.four.clusters)
 
 
 
