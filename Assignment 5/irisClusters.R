@@ -12,7 +12,7 @@ plot(k.two[c("Sepal.Length", "Sepal.Width")], col = kmeans.two$cluster)+
   points(kmeans.two$centers[,c("Sepal.Length", "Sepal.Width")], 
          col = 1:3, pch = 8, cex=2)
 
-### k = Three - Supervised
+### k Three
 kmeans.three <- kmeans(iris.data, 3)
 kmeans.three
 
@@ -21,7 +21,7 @@ plot(k.three[c("Sepal.Length", "Sepal.Width")], col = kmeans.three$cluster)+
   points(kmeans.three$centers[,c("Sepal.Length", "Sepal.Width")], 
   col = 1:3, pch = 8, cex=2)
 
-### k = Four - Supervised
+### k Four
 kmeans.four <- kmeans(iris.data, 4)
 kmeans.four
 

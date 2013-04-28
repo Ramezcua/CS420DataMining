@@ -1,6 +1,6 @@
 # Created by Ricco Amezcua
 # First created on 4/22/2013
-# Last updated on 4/22/2013
+# Last updated on 4/28/2013
 # This file contains the assignment code Assignment 5 for CS 422
 # It uses the iris data set
 
@@ -86,13 +86,17 @@ StoppingCondition <- function(previous.clusters, current.clusters, threshold){
 
 # This is my kmeans function.  It takes a data frame of data and a k
 # It returns a vector of the clusters associated with the data 
-MyKMeans <-function(df, k){
+MyKMeans <-function(df, k, measure.SSE=FALSE){
   natt <- ncol(df)
   centroids <- as.data.frame(matrix(data=0, nrow=k, ncol=natt))
   
   # Adding a cluster column and randomly assigning each point to a cluster
   df["Cluster"] <- NA
   df$Cluster <- sample(1:k, nrow(df), replace=TRUE)
+  
+  SSE <- NULL
+  
+  overall.SSE <- NULL
   
   stopped <- FALSE
   while(!stopped){
@@ -128,15 +132,26 @@ MyKMeans <-function(df, k){
       }
       
     }
+  
+    if (measure.SSE){
+      #Measure the SSE and add it to the SSE vector
+      current.SSE <- AllClusterSSE(temp, k, as.vector(df$Cluster))
+      overall.SSE <- c(overall.SSE, as.numeric(current.SSE))
+    }
     
     if (StoppingCondition(previous.clusters, current.clusters, DIFF.THRESH)){
       stopped <- TRUE
     }
+  
   }
   
-  return (as.vector(df$Cluster))
+  return (list(Cluster=as.vector(df$Cluster), SSE=overall.SSE))
 }
 
+
+
+# This function gets the SSE of all active centroids
+# This function is used for the redistribution of points
 CentroidSSEVector <- function(df, centroids, inactive.clusters){
   active.clusters <- setdiff(unique(df$Cluster), inactive.clusters)
   SSE <- NULL
@@ -198,13 +213,16 @@ iris.kmeans$Species <- NULL
 iris.kmeans <- NormalizeData(iris.kmeans, ncol(iris.kmeans))
 
 # K equal to 2
-k.two.clusters <- MyKMeans(iris.kmeans, 2)
+k.two.time <- system.time(k.two.result <- MyKMeans(iris.kmeans, 2))
+k.two.clusters <- k.two.result$Cluster
 
 # K equal to 3
-k.three.clusters <- MyKMeans(iris.kmeans, 3)
+k.three.result <- MyKMeans(iris.kmeans, 3)
+k.three.clusters <- k.three.result$Cluster
 
 # K equal to 4
-k.four.clusters <- MyKMeans(iris.kmeans, 4)
+k.four.result <- MyKMeans(iris.kmeans, 4)
+k.four.clusters <- k.four.result$Cluster
 
 ## Tables
 table(iris$Species, k.two.clusters)
@@ -221,12 +239,15 @@ AllClusterSSE(iris.kmeans, 2, k.two.clusters)
 AllClusterSSE(iris.kmeans, 3, k.three.clusters)
 AllClusterSSE(iris.kmeans, 4, k.four.clusters)
 
+# Times
+print(k.two.time)
 
+# Get SSE Graphs
+k.two.result <- MyKMeans(iris.kmeans, 2, TRUE)
+k.two.SSE <- k.two.result$SSE
+plot(k.two.SSE, c(1:length(k.two.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 2")
 
 ### Notes on what to do next
-# Handle empty clusters.  This can be done by checking that every cluster has a point
-# during assignment. If a cluster is empty ( can be more than 1) find the cluster with
-# the highest SSE and chooose a point from there
 # Graph SSE for myKMeans.  Probably a list of iteration number and kmeans and create a graph
 # from that
 # Compare Datasets. Calculate the Entropy and SSE
