@@ -1,6 +1,6 @@
 # Created by Ricco Amezcua
 # First created on 4/22/2013
-# Last updated on 4/28/2013
+# Last updated on 4/29/2013
 # This file contains the assignment code Assignment 5 for CS 422
 # It uses the iris data set
 
@@ -217,37 +217,83 @@ k.two.time <- system.time(k.two.result <- MyKMeans(iris.kmeans, 2))
 k.two.clusters <- k.two.result$Cluster
 
 # K equal to 3
-k.three.result <- MyKMeans(iris.kmeans, 3)
+k.three.time <- system.time(k.three.result <- MyKMeans(iris.kmeans, 3))
 k.three.clusters <- k.three.result$Cluster
 
 # K equal to 4
-k.four.result <- MyKMeans(iris.kmeans, 4)
+k.four.time <- system.time(k.four.result <- MyKMeans(iris.kmeans, 4))
 k.four.clusters <- k.four.result$Cluster
 
-## Tables
+# K equal to 4
+k.five.time <- system.time(k.five.result <- MyKMeans(iris.kmeans, 5))
+k.five.clusters <- k.five.result$Cluster
+
+# K equal to 4
+k.six.time <- system.time(k.six.result <- MyKMeans(iris.kmeans, 6))
+k.six.clusters <- k.six.result$Cluster
+
+# Times
+print("Times for My K Means")
+k.two.time
+k.three.time
+k.four.time
+k.five.time
+k.six.time
+
+
+# Tables
 table(iris$Species, k.two.clusters)
 table(iris$Species, k.three.clusters)
 table(iris$Species, k.four.clusters)
+table(iris$Species, k.five.clusters)
+table(iris$Species, k.six.clusters)
+
+# Final SSE Calculation
+print("SSE calculation for MyKmeans")
+AllClusterSSE(iris.kmeans, 2, k.two.clusters)
+AllClusterSSE(iris.kmeans, 3, k.three.clusters)
+AllClusterSSE(iris.kmeans, 4, k.four.clusters)
+AllClusterSSE(iris.kmeans, 5, k.five.clusters)
+AllClusterSSE(iris.kmeans, 6, k.six.clusters)
+
 
 # Similarity Matrices
 GetSimilarityMatrix(iris.kmeans, k.two.clusters, "My K Means: 2 Clusters")
 GetSimilarityMatrix(iris.kmeans, k.three.clusters, "My K Means: 3 Clusters")
 GetSimilarityMatrix(iris.kmeans, k.four.clusters, "My K Means: 4 Clusters")
+GetSimilarityMatrix(iris.kmeans, k.five.clusters, "My K Means: 5 Clusters")
+GetSimilarityMatrix(iris.kmeans, k.six.clusters, "My K Means: 6 Clusters")
 
-# Final SSE Calculation
-AllClusterSSE(iris.kmeans, 2, k.two.clusters)
-AllClusterSSE(iris.kmeans, 3, k.three.clusters)
-AllClusterSSE(iris.kmeans, 4, k.four.clusters)
 
-# Times
-print(k.two.time)
+
+#Plots
+plot(iris.data, col=k.two.clusters, main="My K Means, K = 2")
+plot(iris.data, col=k.three.clusters, main="My K Means, K = 3")
+plot(iris.data, col=k.four.clusters, main="My K Means, K = 4")
+plot(iris.data, col=k.five.clusters, main="My K Means, K = 5")
+plot(iris.data, col=k.six.clusters, main="My K Means, K = 6")
+
 
 # Get SSE Graphs
 k.two.result <- MyKMeans(iris.kmeans, 2, TRUE)
 k.two.SSE <- k.two.result$SSE
 plot(k.two.SSE, c(1:length(k.two.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 2")
 
+k.three.result <- MyKMeans(iris.kmeans, 3, TRUE)
+k.three.SSE <- k.three.result$SSE
+plot(k.three.SSE, c(1:length(k.three.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 3")
+
+k.four.result <- MyKMeans(iris.kmeans, 4, TRUE)
+k.four.SSE <- k.four.result$SSE
+plot(k.four.SSE, c(1:length(k.four.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 4")
+
+k.five.result <- MyKMeans(iris.kmeans, 5, TRUE)
+k.five.SSE <- k.five.result$SSE
+plot(k.five.SSE, c(1:length(k.five.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 5")
+
+k.six.result <- MyKMeans(iris.kmeans, 6, TRUE)
+k.six.SSE <- k.six.result$SSE
+plot(k.six.SSE, c(1:length(k.six.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 6")
+
 ### Notes on what to do next
-# Graph SSE for myKMeans.  Probably a list of iteration number and kmeans and create a graph
-# from that
 # Compare Datasets. Calculate the Entropy and SSE
