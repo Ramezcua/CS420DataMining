@@ -232,6 +232,7 @@ k.five.clusters <- k.five.result$Cluster
 k.six.time <- system.time(k.six.result <- MyKMeans(iris.kmeans, 6))
 k.six.clusters <- k.six.result$Cluster
 
+sink("./data/myKMeansData.txt", split=T)
 # Times
 print("Times for My K Means")
 k.two.time
@@ -256,6 +257,7 @@ AllClusterSSE(iris.kmeans, 4, k.four.clusters)
 AllClusterSSE(iris.kmeans, 5, k.five.clusters)
 AllClusterSSE(iris.kmeans, 6, k.six.clusters)
 
+sink()
 
 # Similarity Matrices
 GetSimilarityMatrix(iris.kmeans, k.two.clusters, "My K Means: 2 Clusters")
@@ -267,11 +269,11 @@ GetSimilarityMatrix(iris.kmeans, k.six.clusters, "My K Means: 6 Clusters")
 
 
 #Plots
-plot(iris.data, col=k.two.clusters, main="My K Means, K = 2")
-plot(iris.data, col=k.three.clusters, main="My K Means, K = 3")
-plot(iris.data, col=k.four.clusters, main="My K Means, K = 4")
-plot(iris.data, col=k.five.clusters, main="My K Means, K = 5")
-plot(iris.data, col=k.six.clusters, main="My K Means, K = 6")
+plot(iris.kmeans, col=k.two.clusters, main="My K Means, K = 2")
+plot(iris.kmeans, col=k.three.clusters, main="My K Means, K = 3")
+plot(iris.kmeans, col=k.four.clusters, main="My K Means, K = 4")
+plot(iris.kmeans, col=k.five.clusters, main="My K Means, K = 5")
+plot(iris.kmeans, col=k.six.clusters, main="My K Means, K = 6")
 
 
 # Get SSE Graphs
@@ -294,6 +296,3 @@ plot(k.five.SSE, c(1:length(k.five.SSE)), xlab="SSE", ylab="Iteration", main="My
 k.six.result <- MyKMeans(iris.kmeans, 6, TRUE)
 k.six.SSE <- k.six.result$SSE
 plot(k.six.SSE, c(1:length(k.six.SSE)), xlab="SSE", ylab="Iteration", main="My KMeans, K = 6")
-
-### Notes on what to do next
-# Compare Datasets. Calculate the Entropy and SSE

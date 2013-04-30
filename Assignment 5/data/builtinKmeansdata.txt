@@ -1,0 +1,43 @@
+[1] "Times for built in kmeans"
+   user  system elapsed 
+  0.002   0.000   0.002 
+   user  system elapsed 
+  0.001   0.000   0.001 
+   user  system elapsed 
+  0.001   0.000   0.001 
+   user  system elapsed 
+  0.001   0.000   0.001 
+   user  system elapsed 
+  0.001   0.000   0.001 
+[1] "Comparison of real classes and clusters"
+            
+              1  2
+  setosa     50  0
+  versicolor  3 47
+  virginica   0 50
+            
+              1  2  3
+  setosa      0  0 50
+  versicolor  2 48  0
+  virginica  36 14  0
+            
+              1  2  3  4
+  setosa     28 22  0  0
+  versicolor  0  0  2 48
+  virginica   0  0 36 14
+            
+              1  2  3  4  5
+  setosa     50  0  0  0  0
+  versicolor  0 26 24  0  0
+  virginica   0  1 13 12 24
+            
+              1  2  3  4  5  6
+  setosa      0  0  0  0  0 50
+  versicolor  4 27 19  0  0  0
+  virginica  15  1  0 12 22  0
+[1] "SSE for KMeans"
+[1] 152.348
+[1] 78.85144
+[1] 71.44525
+[1] 46.46117
+[1] 41.70442
