@@ -1,0 +1,15 @@
+            
+              0  1  2  3  4
+  setosa      4 46  0  0  0
+  versicolor 11  0 36  3  0
+  virginica  17  0  0 11 22
+            
+              0  1  2
+  setosa      1 49  0
+  versicolor  6  0 44
+  virginica  10  0 40
+            
+              0  1  2
+  setosa      1 49  0
+  versicolor  4  0 46
+  virginica   4  0 46
